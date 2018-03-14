@@ -4,7 +4,6 @@ public class PS4Controller
 {
     public enum Buttons
     {
-        // 0 = not known
         TRIANGLE(4),
         SQUARE(3),
         CIRCLE(2),

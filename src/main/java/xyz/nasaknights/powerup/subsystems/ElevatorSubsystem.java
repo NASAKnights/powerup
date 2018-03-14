@@ -10,13 +10,13 @@ import xyz.nasaknights.powerup.logging.Loggable;
 
 public class ElevatorSubsystem extends Subsystem
 {
-    private final int FRONT_LEFT_ID = 5;
+    private final int FRONT_LEFT_ID = 6;
     private final int FRONT_RIGHT_ID = 7;
-    private final int REAR_LEFT_ID = 6;
+    private final int REAR_LEFT_ID = 5;
     private final int REAR_RIGHT_ID = 8;
 
-    private final int TOP_LIMIT_ID = 0;
-    private final int BOTTOM_LIMIT_ID = 1;
+    private final int TOP_LIMIT_ID = 8;
+    private final int BOTTOM_LIMIT_ID = 9;
 
     private WPI_TalonSRX frontLeft;
     private WPI_TalonSRX frontRight;
@@ -41,13 +41,21 @@ public class ElevatorSubsystem extends Subsystem
             Loggable.log("Elevator", LogLevel.INFO, "Done.");
             Loggable.log("Elevator", LogLevel.INFO, "Configuring elevator motors.");
 
-            rearRight.set(ControlMode.Follower, FRONT_RIGHT_ID);
-            rearLeft.set(ControlMode.Follower, FRONT_LEFT_ID);
+            frontRight.follow(frontLeft);
+            frontRight.setInverted(true);
+            
+            rearLeft.follow(frontLeft);
+            
+            rearRight.follow(frontLeft);
+            rearRight.setInverted(true);
 
-            frontLeft.configOpenloopRamp(.2, 10);
-            frontRight.configOpenloopRamp(.2, 10);
+            frontLeft.configOpenloopRamp(.4, 10);
+            frontRight.configOpenloopRamp(.4, 10);
 
             frontLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+            
+            topLimitSwitch = new DigitalInput(TOP_LIMIT_ID);
+            bottomLimitSwitch = new DigitalInput(BOTTOM_LIMIT_ID);
         } catch (Exception e)
         {
             throw new SubsystemInitializationException("Elevator initialization failed with " + e.getMessage());
@@ -62,18 +70,27 @@ public class ElevatorSubsystem extends Subsystem
 
     public void setPower(double power)
     {
-        frontLeft.set(power);
-        frontRight.set(power * -1);
+        frontLeft.set(power * -1);
     }
 
     public boolean getTopLimit()
     {
-        return false; // topLimitSwitch.get();
+    	if(topLimitSwitch == null)
+    	{
+    		return false;
+    	}
+    	
+        return topLimitSwitch.get();
     }
 
     public boolean getBottomLimit()
     {
-        return false; // bottomLimitSwitch.get();
+    	if(bottomLimitSwitch == null)
+    	{
+    		return false;
+    	}
+    	
+        return bottomLimitSwitch.get();
     }
 
     public int getPosition()

@@ -1,9 +1,14 @@
 package xyz.nasaknights.powerup;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import xyz.nasaknights.powerup.commands.ArcadeDriveCommand;
 import xyz.nasaknights.powerup.commands.ElevatorCommand;
 import xyz.nasaknights.powerup.commands.GripperCommand;
 import xyz.nasaknights.powerup.commands.IntakeCommand;
@@ -104,9 +109,12 @@ public class Robot extends IterativeRobot
         resetSubsystems();
 
         prepareInputs();
+        
+        UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+        
+        camera.setResolution(640, 480);
 
         Loggable.log("SYSTEM", LogLevel.INFO, "Initialization completed. Took " + (System.currentTimeMillis() - start) + " milliseconds.");
-
     }
 
     @Override
@@ -122,6 +130,7 @@ public class Robot extends IterativeRobot
     @Override
     public void teleopInit()
     {
+    	new ArcadeDriveCommand().start();
     }
 
     @Override
@@ -148,6 +157,12 @@ public class Robot extends IterativeRobot
     public void testPeriodic()
     {
     }
+    
+    @Override
+    public void robotPeriodic()
+    {
+    	Scheduler.getInstance().run();
+    }
 
     private void resetSubsystems()
     {
@@ -158,6 +173,8 @@ public class Robot extends IterativeRobot
             wrist = new WristSubsystem();
             elevator = new ElevatorSubsystem();
             gripper = new GripperSubsystem();
+            
+            wrist.setWristValue(Value.kForward);
         } catch (SubsystemInitializationException e)
         {
             Loggable.log("SYSTEM", LogLevel.CRITICAL, "A subsystem has failed to initialize, and the robot will not function properly. The stacktrace is found below.");
@@ -167,8 +184,11 @@ public class Robot extends IterativeRobot
 
     private void prepareInputs()
     {
-        new JoystickButton(getOperator(), PS4Controller.Buttons.X.getID()).whenPressed(new GripperCommand(!getGripper().getGripperClosed()));
-        new JoystickButton(getOperator(), PS4Controller.Buttons.SQUARE.getID()).whenPressed(new WristCommand(!getWrist().getWristDown()));
+        // new JoystickButton(getOperator(), PS4Controller.Buttons.X.getID()).whenPressed(new GripperCommand());
+        new JoystickButton(getOperator(), PS4Controller.Buttons.SQUARE.getID()).whenPressed(new WristCommand(Value.kForward));
+        new JoystickButton(getOperator(), PS4Controller.Buttons.SQUARE.getID()).whenReleased(new WristCommand(Value.kReverse));
+        new JoystickButton(getOperator(), PS4Controller.Buttons.X.getID()).whenPressed(new GripperCommand(Value.kReverse));
+        new JoystickButton(getOperator(), PS4Controller.Buttons.X.getID()).whenReleased(new GripperCommand(Value.kForward));
         new JoystickButton(getOperator(), PS4Controller.Buttons.TRIANGLE.getID()).whileHeld(new ElevatorCommand(true));
         new JoystickButton(getOperator(), PS4Controller.Buttons.CIRCLE.getID()).whileHeld(new ElevatorCommand(false));
 

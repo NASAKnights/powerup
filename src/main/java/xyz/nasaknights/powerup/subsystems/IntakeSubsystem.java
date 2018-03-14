@@ -45,8 +45,8 @@ public class IntakeSubsystem
                 right.set(power);
                 break;
             case STALL:
-                left.set(-.075);
-                right.set(.075);
+                left.set(-.15);
+                right.set(.15);
                 break;
         }
     }

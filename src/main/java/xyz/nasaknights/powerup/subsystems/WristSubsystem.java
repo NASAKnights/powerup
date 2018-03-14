@@ -1,6 +1,7 @@
 package xyz.nasaknights.powerup.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import xyz.nasaknights.powerup.Robot;
 import xyz.nasaknights.powerup.logging.LogLevel;
@@ -8,8 +9,10 @@ import xyz.nasaknights.powerup.logging.Loggable;
 
 public class WristSubsystem extends Subsystem
 {
-    private final static int FORWARD_PCM_ID = 2;
-    private final static int REVERSE_PCM_ID = 3;
+    private final static int FORWARD_PCM_ID = 0;
+    private final static int REVERSE_PCM_ID = 1;
+    
+    private static long lastRun = 0;
 
     private DoubleSolenoid wrist;
 
@@ -20,6 +23,8 @@ public class WristSubsystem extends Subsystem
             Loggable.log("Wrist", LogLevel.DEBUG, "Initializing wrist pneumatics, please wait.");
 
             wrist = new DoubleSolenoid(Robot.getPCMPort(), FORWARD_PCM_ID, REVERSE_PCM_ID);
+            
+            wrist.set(Value.kReverse);
 
             Loggable.log("Wrist", LogLevel.DEBUG, "Done.");
         } catch (Exception e)
@@ -34,13 +39,19 @@ public class WristSubsystem extends Subsystem
 
     }
 
-    public boolean getWristDown()
+    public Value getWristValue()
     {
-        return !(wrist.get() == DoubleSolenoid.Value.kReverse);
+        return wrist.get();
     }
 
-    public void setWristDown(boolean down)
+    public void setWristValue(Value value)
     {
-        wrist.set(down ? DoubleSolenoid.Value.kOff : DoubleSolenoid.Value.kForward);
+    	if(System.currentTimeMillis() - lastRun < 50)
+    	{
+    		return;
+    	}
+    	
+        wrist.set(value);
+        lastRun = System.currentTimeMillis();
     }
 }

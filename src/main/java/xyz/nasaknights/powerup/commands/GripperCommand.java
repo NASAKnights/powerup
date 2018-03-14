@@ -1,5 +1,6 @@
 package xyz.nasaknights.powerup.commands;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 import xyz.nasaknights.powerup.Robot;
 import xyz.nasaknights.powerup.logging.LogLevel;
@@ -8,26 +9,25 @@ import xyz.nasaknights.powerup.logging.Loggable;
 public class GripperCommand extends Command
 {
     private boolean finished = false;
-    private boolean close;
+    private Value value;
 
-    public GripperCommand(boolean close)
+    public GripperCommand(Value value)
     {
         requires(Robot.getGripper());
 
-        this.close = close;
+        this.value = value;
     }
-
-    @Override
-    protected void execute()
+    
+    public GripperCommand()
     {
-        if (Robot.getGripper().getGripperClosed() == close)
-        {
-            Loggable.log("Gripper", LogLevel.INFO, "Gripper already " + (close ? "closed" : "open") + ". Exiting command.");
-            finished = true;
-            return;
-        }
-
-        Robot.getGripper().setSolenoidClosed(close);
+    	requires(Robot.getGripper());
+    }
+    
+    @Override
+    protected void initialize()
+    {
+    	Robot.getGripper().setValue(value);
+    	finished = true;
     }
 
     @Override

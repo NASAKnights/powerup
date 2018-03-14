@@ -16,7 +16,7 @@ public class IntakeCommand extends Command
     @Override
     protected void execute()
     {
-        Robot.getIntake().setIntakeState(out ? IntakeSubsystem.IntakeState.EJECT : IntakeSubsystem.IntakeState.INTAKE, .9);
+        Robot.getIntake().setIntakeState(out ? IntakeSubsystem.IntakeState.EJECT : IntakeSubsystem.IntakeState.INTAKE, 1);
     }
 
     @Override
