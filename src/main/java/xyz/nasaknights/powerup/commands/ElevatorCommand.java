@@ -30,46 +30,17 @@ public class ElevatorCommand extends Command
     @Override
     protected void execute()
     {
-    	/*if ((up && Robot.getElevator().getTopLimit()) || (!up && Robot.getElevator().getBottomLimit()))
+    	if(up && Robot.getElevator().getTopLimit())
         {
-            Robot.getElevator().setPower(0.0);
-            Loggable.log("Elevator", LogLevel.INFO, "Elevator has been detected on the " + (up ? "top" : "bottom") + " limit switch. Disabling motors and ending command.");
+        	Robot.getElevator().setPower(0);
         }
-        else if (up && ElevatorHeight.TOP.getHeight() - Robot.getElevator().getPosition() < ElevatorHeight.TOP.getHeight() * .1)
+        else if(!up && Robot.getElevator().getBottomLimit())
         {
-            Robot.getElevator().setPower((ElevatorHeight.TOP.getHeight() - Robot.getElevator().getPosition()) * kP);
-        }
-        else if (!up && Robot.getElevator().getPosition() < ElevatorHeight.TOP.getHeight() * .1)
-        {
-            Robot.getElevator().setPower(Robot.getElevator().getPosition() * kP);
+        	Robot.getElevator().setPower(0);
         }
         else
         {
-        	Robot.getElevator().setPower(up ? .85 : -.45);
-        }*/
-        if (level == null)
-        {
-            if(up && Robot.getElevator().getTopLimit())
-            {
-            	Robot.getElevator().setPower(0);
-            }
-            else if(!up && Robot.getElevator().getBottomLimit())
-            {
-            	Robot.getElevator().setPower(0);
-            }
-            else
-            {
-            	Robot.getElevator().setPower(up ? .85 : -.45);
-            }
-        } else
-        {
-            if (Robot.getElevator().getPosition() - level.getHeight() < 5 || Robot.getElevator().getPosition() - level.getHeight() > -5)
-            {
-                Robot.getElevator().setPower(0.0);
-                finished = true;
-            }
-
-            Robot.getElevator().setPower(level.getHeight() - Robot.getElevator().getPosition() * kP);
+        	Robot.getElevator().setPower(up ? .7 : -.35);
         }
     }
     
