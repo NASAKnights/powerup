@@ -5,16 +5,15 @@ import xyz.nasaknights.powerup.Robot;
 
 public class ElevatorCommand extends PIDCommand
 {
-    private static final double kP = 1;
-
     public ElevatorCommand(boolean up)
     {
-        super("Elevator", .0001, 0, 0);
+        super("Elevator", .00015, 0, .00007);
 
         requires(Robot.getElevator());
 
         this.getPIDController().setSetpoint(up ? ElevatorHeight.TOP.getHeight() : ElevatorHeight.BOTTOM.getHeight());
-        this.getPIDController().setAbsoluteTolerance(1000);
+        this.getPIDController().setAbsoluteTolerance(100);
+        this.getPIDController().setOutputRange(-.35, .80);
     }
 
     @Override
@@ -52,10 +51,10 @@ public class ElevatorCommand extends PIDCommand
 
     public enum ElevatorHeight
     {
-        BOTTOM(0),
+        BOTTOM(500),
         SWITCH(4000),
         MIDDLE(10300),
-        TOP(20600);
+        TOP(20800);
 
         private int height;
 

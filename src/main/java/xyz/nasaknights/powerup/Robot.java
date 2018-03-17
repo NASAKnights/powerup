@@ -6,14 +6,18 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import xyz.nasaknights.powerup.commands.*;
+import xyz.nasaknights.powerup.commands.AutonomousCommand.Position;
 import xyz.nasaknights.powerup.logging.LogLevel;
 import xyz.nasaknights.powerup.logging.Loggable;
 import xyz.nasaknights.powerup.subsystems.*;
 
 import java.util.Arrays;
+
+import com.kauailabs.navx.frc.AHRS;
 
 public class Robot extends IterativeRobot
 {
@@ -26,6 +30,7 @@ public class Robot extends IterativeRobot
     private static WristSubsystem wrist;
     private static ElevatorSubsystem elevator;
     private static GripperSubsystem gripper;
+    private static AHRS navx;
 
     public static IntakeSubsystem getIntake()
     {
@@ -109,6 +114,8 @@ public class Robot extends IterativeRobot
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
         
         camera.setResolution(640, 480);
+        
+        navx = new AHRS(Port.kMXP);
 
         Loggable.log("SYSTEM", LogLevel.INFO, "Initialization completed. Took " + (System.currentTimeMillis() - start) + " milliseconds.");
     }
@@ -121,7 +128,11 @@ public class Robot extends IterativeRobot
     @Override
     public void autonomousInit()
     {
+    	
+    	
         new AutonomousCommand().start();
+        new WristCommand(Value.kReverse).start();
+        new GripperCommand(Value.kForward).start();
     }
 
     @Override
@@ -181,6 +192,7 @@ public class Robot extends IterativeRobot
 
     private void prepareInputs()
     {
+        // new JoystickButton(getOperator(), PS4Controller.Buttons.X.getID()).whenPressed(new GripperCommand());
         new JoystickButton(getOperator(), PS4Controller.Buttons.SQUARE.getID()).whenPressed(new WristCommand(Value.kForward));
         new JoystickButton(getOperator(), PS4Controller.Buttons.SQUARE.getID()).whenReleased(new WristCommand(Value.kReverse));
         new JoystickButton(getOperator(), PS4Controller.Buttons.X.getID()).whenPressed(new GripperCommand(Value.kReverse));
@@ -228,5 +240,10 @@ public class Robot extends IterativeRobot
         {
             return getName() + ", " + getRole() + "; " + getEmail();
         }
+    }
+    
+    public static AHRS getNavX()
+    {
+    	return navx;
     }
 }

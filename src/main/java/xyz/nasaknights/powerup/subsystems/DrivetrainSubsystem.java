@@ -3,6 +3,8 @@ package xyz.nasaknights.powerup.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import xyz.nasaknights.powerup.commands.ArcadeDriveCommand;
@@ -15,10 +17,7 @@ public class DrivetrainSubsystem extends Subsystem
     private final int FRONT_RIGHT_ID = 3;
     private final int REAR_LEFT_ID = 1;
     private final int REAR_RIGHT_ID = 4;
-
-    private final double kP = 1;
-    private final double kF = 1;
-
+    
     private WPI_TalonSRX frontLeft;
     private WPI_TalonSRX frontRight;
     private WPI_TalonSRX rearLeft;
@@ -52,12 +51,6 @@ public class DrivetrainSubsystem extends Subsystem
 
             rearRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
             rearLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-
-            /*frontLeft.config_kP(0, kP, 10);
-            frontLeft.config_kF(0, kF, 10);
-
-            frontRight.config_kP(0, kP, 10);
-            frontRight.config_kF(0, kF, 10);*/
 
             Loggable.log("Drivetrain", LogLevel.INFO, "Done.");
         } catch (Exception e)
