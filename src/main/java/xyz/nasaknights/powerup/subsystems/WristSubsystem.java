@@ -24,8 +24,6 @@ public class WristSubsystem extends Subsystem
 
             wrist = new DoubleSolenoid(Robot.getPCMPort(), FORWARD_PCM_ID, REVERSE_PCM_ID);
             
-            wrist.set(Value.kReverse);
-
             Loggable.log("Wrist", LogLevel.DEBUG, "Done.");
         } catch (Exception e)
         {
