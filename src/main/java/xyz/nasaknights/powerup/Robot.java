@@ -3,16 +3,12 @@ package xyz.nasaknights.powerup;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import xyz.nasaknights.powerup.commands.ArcadeDriveCommand;
-import xyz.nasaknights.powerup.commands.ElevatorCommand;
-import xyz.nasaknights.powerup.commands.GripperCommand;
-import xyz.nasaknights.powerup.commands.IntakeCommand;
-import xyz.nasaknights.powerup.commands.WristCommand;
+import xyz.nasaknights.powerup.commands.*;
 import xyz.nasaknights.powerup.logging.LogLevel;
 import xyz.nasaknights.powerup.logging.Loggable;
 import xyz.nasaknights.powerup.subsystems.*;
@@ -125,6 +121,7 @@ public class Robot extends IterativeRobot
     @Override
     public void autonomousInit()
     {
+        new AutonomousCommand().start();
     }
 
     @Override
