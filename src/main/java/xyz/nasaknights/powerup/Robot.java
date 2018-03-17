@@ -114,8 +114,6 @@ public class Robot extends IterativeRobot
         UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
         
         camera.setResolution(640, 480);
-        
-        navx = new AHRS(Port.kMXP);
 
         Loggable.log("SYSTEM", LogLevel.INFO, "Initialization completed. Took " + (System.currentTimeMillis() - start) + " milliseconds.");
     }
@@ -128,9 +126,7 @@ public class Robot extends IterativeRobot
     @Override
     public void autonomousInit()
     {
-    	
-    	
-        new AutonomousCommand().start();
+        new AutonomousCommand();
         new WristCommand(Value.kReverse).start();
         new GripperCommand(Value.kForward).start();
     }

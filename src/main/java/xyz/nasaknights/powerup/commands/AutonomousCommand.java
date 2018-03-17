@@ -1,17 +1,14 @@
 package xyz.nasaknights.powerup.commands;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.command.CommandGroup;
-
 public class AutonomousCommand
 {
-    public AutonomousCommand(Position position)
+    public AutonomousCommand()
     {
-    	String gameMessage = DriverStation.getInstance().getGameSpecificMessage();
+    	//String gameMessage = DriverStation.getInstance().getGameSpecificMessage();
     	
-    	new TurnToAngleCommand(-90).start();
+    	new StraightDriveCommand(-.7, 3000).start();
     	
-    	switch(position)
+    	/*switch(position)
     	{
     		case LEFT:
     			
@@ -29,10 +26,10 @@ public class AutonomousCommand
     				new StraightDriveCommand(-.7, 2800).start();
     			}
     			break;
-    	}
+    	}*/
     }
     
-    private final class Right_Switch_Auto extends CommandGroup
+    /*private final class Right_Switch_Auto extends CommandGroup
     {
     	public Right_Switch_Auto()
     	{
@@ -41,7 +38,7 @@ public class AutonomousCommand
             addSequential(new TurnToAngleCommand(-90));
             addSequential(new StraightDriveCommand(-.7, 1500));
     	}
-    }
+    }*/
     
     public enum Position
     {
