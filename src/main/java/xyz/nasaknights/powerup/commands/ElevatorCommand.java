@@ -1,65 +1,60 @@
 package xyz.nasaknights.powerup.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.PIDCommand;
 import xyz.nasaknights.powerup.Robot;
-import xyz.nasaknights.powerup.logging.LogLevel;
-import xyz.nasaknights.powerup.logging.Loggable;
 
-public class ElevatorCommand extends Command
+public class ElevatorCommand extends PIDCommand
 {
     private static final double kP = 1;
 
-    private boolean up;
-
-    private ElevatorHeight level = null;
-
-    private boolean finished = false;
-
     public ElevatorCommand(boolean up)
     {
+        super("Elevator", .0001, 0, 0);
+
         requires(Robot.getElevator());
-        this.up = up;
+
+        this.getPIDController().setSetpoint(up ? ElevatorHeight.TOP.getHeight() : ElevatorHeight.BOTTOM.getHeight());
+        this.getPIDController().setAbsoluteTolerance(1000);
     }
 
-    public ElevatorCommand(ElevatorHeight level)
-    {
-        requires(Robot.getElevator());
-        this.level = level;
-    }
-
-    @Override
-    protected void execute()
-    {
-    	if(up && Robot.getElevator().getTopLimit())
-        {
-        	Robot.getElevator().setPower(0);
-        }
-        else if(!up && Robot.getElevator().getBottomLimit())
-        {
-        	Robot.getElevator().setPower(0);
-        }
-        else
-        {
-        	Robot.getElevator().setPower(up ? .7 : -.35);
-        }
-    }
-    
     @Override
     protected void end()
     {
-    	Robot.getElevator().setPower(0.0);
+        this.getPIDController().disable();
+        Robot.getElevator().setPower(0.0);
     }
 
     @Override
-    protected boolean isFinished()
-    {
-        return finished;
+    protected boolean isFinished() {
+        return this.getPIDController().onTarget();
+    }
+
+    @Override
+    protected double returnPIDInput() {
+        return Robot.getElevator().getPosition();
+    }
+
+    @Override
+    protected void usePIDOutput(double output) {
+        Robot.getElevator().setPower(output);
+    }
+
+    @Override
+    protected void interrupted() {
+        this.getPIDController().disable();
+        Robot.getElevator().setPower(0.0);
+    }
+
+    @Override
+    protected void initialize() {
+        this.getPIDController().enable();
     }
 
     public enum ElevatorHeight
     {
         BOTTOM(0),
         SWITCH(4000),
+        MIDDLE(10300),
         TOP(20600);
 
         private int height;

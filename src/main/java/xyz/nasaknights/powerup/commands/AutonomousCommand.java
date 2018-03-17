@@ -6,6 +6,7 @@ public class AutonomousCommand extends CommandGroup
 {
     public AutonomousCommand()
     {
-        addSequential(new StraightDriveCommand(-.7, 3000), 3);
+        // addSequential(new StraightDriveCommand(-.7, 3000), 3);
+        addSequential(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.MIDDLE));
     }
 }
