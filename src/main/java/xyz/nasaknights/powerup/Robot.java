@@ -122,6 +122,8 @@ public class Robot extends IterativeRobot
     public void autonomousInit()
     {
         new AutonomousCommand().start();
+        new WristCommand(Value.kReverse).start();
+        new GripperCommand(Value.kForward).start();
     }
 
     @Override
