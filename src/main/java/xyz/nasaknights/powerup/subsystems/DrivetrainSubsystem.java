@@ -51,6 +51,9 @@ public class DrivetrainSubsystem extends Subsystem
 
             rearRight.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
             rearLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+            
+            frontLeft.configOpenloopRamp(.25, 10);
+            frontRight.configOpenloopRamp(.25, 10);
 
             Loggable.log("Drivetrain", LogLevel.INFO, "Done.");
         } catch (Exception e)

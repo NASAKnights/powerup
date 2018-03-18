@@ -15,16 +15,10 @@ public class ElevatorSubsystem extends Subsystem
     private final int REAR_LEFT_ID = 5;
     private final int REAR_RIGHT_ID = 8;
 
-    private final int TOP_LIMIT_ID = 8;
-    private final int BOTTOM_LIMIT_ID = 9;
-
     private WPI_TalonSRX frontLeft;
     private WPI_TalonSRX frontRight;
     private WPI_TalonSRX rearLeft;
     private WPI_TalonSRX rearRight;
-
-    private DigitalInput topLimitSwitch;
-    private DigitalInput bottomLimitSwitch;
 
     public ElevatorSubsystem() throws SubsystemInitializationException
     {
@@ -53,9 +47,6 @@ public class ElevatorSubsystem extends Subsystem
             frontRight.configOpenloopRamp(0, 10);
 
             frontLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-            
-            topLimitSwitch = new DigitalInput(TOP_LIMIT_ID);
-            bottomLimitSwitch = new DigitalInput(BOTTOM_LIMIT_ID);
         } catch (Exception e)
         {
             throw new SubsystemInitializationException("Elevator initialization failed with " + e.getMessage());
@@ -73,24 +64,16 @@ public class ElevatorSubsystem extends Subsystem
         frontLeft.set(power * -1);
     }
 
+    @Deprecated
     public boolean getTopLimit()
     {
-    	if(topLimitSwitch == null)
-    	{
-    		return false;
-    	}
-    	
-        return topLimitSwitch.get();
+    	return false;
     }
 
+    @Deprecated
     public boolean getBottomLimit()
     {
-    	if(bottomLimitSwitch == null)
-    	{
-    		return false;
-    	}
-    	
-        return bottomLimitSwitch.get();
+    	return false;
     }
 
     public int getPosition()
