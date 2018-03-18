@@ -3,8 +3,6 @@ package xyz.nasaknights.powerup.commands;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 import xyz.nasaknights.powerup.Robot;
-import xyz.nasaknights.powerup.logging.LogLevel;
-import xyz.nasaknights.powerup.logging.Loggable;
 
 public class WristCommand extends Command
 {

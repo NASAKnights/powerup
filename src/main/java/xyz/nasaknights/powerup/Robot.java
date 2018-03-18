@@ -1,19 +1,33 @@
 package xyz.nasaknights.powerup;
 
+import java.util.Arrays;
+
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import xyz.nasaknights.powerup.commands.*;
+import xyz.nasaknights.powerup.commands.ArcadeDriveCommand;
+import xyz.nasaknights.powerup.commands.AutonomousCommand;
+import xyz.nasaknights.powerup.commands.ElevatorCommand;
+import xyz.nasaknights.powerup.commands.GripperCommand;
+import xyz.nasaknights.powerup.commands.IntakeCommand;
+import xyz.nasaknights.powerup.commands.WristCommand;
 import xyz.nasaknights.powerup.logging.LogLevel;
 import xyz.nasaknights.powerup.logging.Loggable;
-import xyz.nasaknights.powerup.subsystems.*;
-
-import java.util.Arrays;
+import xyz.nasaknights.powerup.subsystems.DrivetrainSubsystem;
+import xyz.nasaknights.powerup.subsystems.ElevatorSubsystem;
+import xyz.nasaknights.powerup.subsystems.GripperSubsystem;
+import xyz.nasaknights.powerup.subsystems.IntakeSubsystem;
+import xyz.nasaknights.powerup.subsystems.SubsystemInitializationException;
+import xyz.nasaknights.powerup.subsystems.WristSubsystem;
 
 public class Robot extends IterativeRobot
 {
@@ -26,6 +40,7 @@ public class Robot extends IterativeRobot
     private static WristSubsystem wrist;
     private static ElevatorSubsystem elevator;
     private static GripperSubsystem gripper;
+    private static AHRS navx;
 
     public static IntakeSubsystem getIntake()
     {
@@ -111,6 +126,12 @@ public class Robot extends IterativeRobot
         camera.setResolution(640, 480);
 
         Loggable.log("SYSTEM", LogLevel.INFO, "Initialization completed. Took " + (System.currentTimeMillis() - start) + " milliseconds.");
+        
+        try {
+	          navx = new AHRS(SPI.Port.kMXP); 
+	    } catch (RuntimeException ex ) {
+	          DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
+	    }
     }
 
     @Override
@@ -121,7 +142,7 @@ public class Robot extends IterativeRobot
     @Override
     public void autonomousInit()
     {
-        new AutonomousCommand().start();
+        new AutonomousCommand();
         new WristCommand(Value.kReverse).start();
         new GripperCommand(Value.kForward).start();
     }
@@ -183,6 +204,7 @@ public class Robot extends IterativeRobot
 
     private void prepareInputs()
     {
+        // new JoystickButton(getOperator(), PS4Controller.Buttons.X.getID()).whenPressed(new GripperCommand());
         new JoystickButton(getOperator(), PS4Controller.Buttons.SQUARE.getID()).whenPressed(new WristCommand(Value.kForward));
         new JoystickButton(getOperator(), PS4Controller.Buttons.SQUARE.getID()).whenReleased(new WristCommand(Value.kReverse));
         new JoystickButton(getOperator(), PS4Controller.Buttons.X.getID()).whenPressed(new GripperCommand(Value.kReverse));
@@ -230,5 +252,10 @@ public class Robot extends IterativeRobot
         {
             return getName() + ", " + getRole() + "; " + getEmail();
         }
+    }
+    
+    public static AHRS getNavX()
+    {
+    	return navx;
     }
 }

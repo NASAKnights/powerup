@@ -48,9 +48,9 @@ public class ElevatorSubsystem extends Subsystem
             
             rearRight.follow(frontLeft);
             rearRight.setInverted(true);
-
-            frontLeft.configOpenloopRamp(.4, 10);
-            frontRight.configOpenloopRamp(.4, 10);
+            
+            frontLeft.configOpenloopRamp(0, 10);
+            frontRight.configOpenloopRamp(0, 10);
 
             frontLeft.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
             
