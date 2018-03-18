@@ -219,7 +219,8 @@ public class Robot extends IterativeRobot
     private enum Authors
     {
         BRADLEY("Bradley Hooten", "bradleyah02@gmail.com", "Lead Developer"),
-        ANDREI("Andrei Stan", "astan54321@gmail.com", "Programming Mentor");
+        ANDREI("Andrei Stan", "astan54321@gmail.com", "Programming Mentor"),
+        MIKE("Mike Byrd", "michael.dreher.byrd@gmail.com", "NASA Knights Team Lead");
 
         private String name;
         private String email;
