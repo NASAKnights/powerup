@@ -25,7 +25,7 @@ public class GripperSubsystem extends Subsystem
 
             gripper = new DoubleSolenoid(Robot.getPCMPort(), FORWARD_PCM_ID, REVERSE_PCM_ID);
             
-            gripper.set(Value.kReverse);
+            gripper.set(Value.kForward);
 
             Loggable.log("Gripper", LogLevel.DEBUG, "Done.");
         } catch (Exception e)
