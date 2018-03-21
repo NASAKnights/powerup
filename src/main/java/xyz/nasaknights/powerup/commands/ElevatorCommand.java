@@ -51,10 +51,10 @@ public class ElevatorCommand extends PIDCommand
 
     public enum ElevatorHeight
     {
-        BOTTOM(500),
+        BOTTOM(0),
         SWITCH(4000),
         MIDDLE(10300),
-        TOP(20800);
+        TOP(21300);
 
         private int height;
 
