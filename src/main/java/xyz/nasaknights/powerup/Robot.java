@@ -38,6 +38,7 @@ public class Robot extends IterativeRobot
     private static AHRS navx;
     private static DigitalInput dio0 = new DigitalInput(0);
     private static DigitalInput dio1 = new DigitalInput(1);
+    private static DigitalInput dio2 = new DigitalInput(2);
 
     public static IntakeSubsystem getIntake()
     {
@@ -127,7 +128,7 @@ public class Robot extends IterativeRobot
         try {
 	          navx = new AHRS(SPI.Port.kMXP); 
 	    } catch (RuntimeException ex ) {
-	          DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
+	          DriverStation.reportError("Error instantiating navX MXP: " + ex.getMessage(), true);
 	    }
     }
 
@@ -148,7 +149,7 @@ public class Robot extends IterativeRobot
         else
             position = AutonomousCommand.Position.LEFT;
 
-        new AutonomousCommand(position);
+        new AutonomousCommand(position, dio2.get());
         new WristCommand(Value.kReverse).start();
         new GripperCommand(Value.kForward).start();
     }

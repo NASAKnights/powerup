@@ -7,7 +7,7 @@ import xyz.nasaknights.powerup.logging.Loggable;
 
 public class AutonomousCommand
 {
-    public AutonomousCommand(Position position)
+    public AutonomousCommand(Position position, boolean scale)
     {
         StraightDriveCommand basic = new StraightDriveCommand(-.7, 2800);
     	char[] gameMessage = DriverStation.getInstance().getGameSpecificMessage().toCharArray();
@@ -17,10 +17,13 @@ public class AutonomousCommand
     	switch(position)
     	{
     		case LEFT:
-    			if(gameMessage[0] == 'L')
+    			if(gameMessage[0] == 'L' && !scale)
                 {
-                    Loggable.log("Autonomous", LogLevel.INFO, "LBA start");
-                    new Left_Basic_Auto().start();
+                    new Left_Switch_Auto().start();
+                }
+                else if(gameMessage[1] == 'L' && scale)
+                {
+                    new Left_Scale_Auto().start();
                 }
                 else
                 {
@@ -31,22 +34,25 @@ public class AutonomousCommand
     			basic.start();
     			break;
     		case RIGHT:
-    			if(gameMessage[0] == 'R')
-    			{
-                    Loggable.log("Autonomous", LogLevel.INFO, "RBA start");
-    				new Right_Basic_Auto().start();
-    			}
-    			else
-    			{
-    				basic.start();
-    			}
+                if(gameMessage[0] == 'R' && !scale)
+                {
+                    new Right_Switch_Auto().start();
+                }
+                else if(gameMessage[1] == 'R' && scale)
+                {
+                    new Right_Scale_Auto().start();
+                }
+                else
+                {
+                    basic.start();
+                }
     			break;
     	}
     }
 
-    private final class Right_Basic_Auto extends CommandGroup
+    private final class Right_Switch_Auto extends CommandGroup
     {
-        public Right_Basic_Auto()
+        public Right_Switch_Auto()
         {
             addSequential(new StraightDriveCommand(-.7, 2700));
             addSequential(new DelayCommand(1000));
@@ -57,15 +63,41 @@ public class AutonomousCommand
         }
     }
 
-    private final class Left_Basic_Auto extends CommandGroup
+    private final class Left_Switch_Auto extends CommandGroup
     {
-        public Left_Basic_Auto()
+        public Left_Switch_Auto()
         {
-            addSequential(new StraightDriveCommand(-.7, 2800));
+            addSequential(new StraightDriveCommand(-.7, 2700));
             addSequential(new DelayCommand(1000));
             addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.SWITCH, true));
             addSequential(new TurnDriveCommand(.6, 1350));
             addSequential(new StraightDriveCommand(-.7, 1500));
+            addSequential(new IntakeCommand(true), .5);
+        }
+    }
+
+    private final class Right_Scale_Auto extends CommandGroup
+    {
+        public Right_Scale_Auto()
+        {
+            addSequential(new StraightDriveCommand(-.7, 4000));
+            addSequential(new DelayCommand(1000));
+            addSequential(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.TOP, true));
+            addSequential(new TurnDriveCommand(-.6, 675));
+            addSequential(new DelayCommand(200));
+            addSequential(new IntakeCommand(true), .5);
+        }
+    }
+
+    private final class Left_Scale_Auto extends CommandGroup
+    {
+        public Left_Scale_Auto()
+        {
+            addSequential(new StraightDriveCommand(-.7, 4000));
+            addSequential(new DelayCommand(1000));
+            addSequential(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.TOP, true));
+            addSequential(new TurnDriveCommand(.6, 675));
+            addSequential(new DelayCommand(200));
             addSequential(new IntakeCommand(true), .5);
         }
     }
