@@ -1,44 +1,74 @@
 package xyz.nasaknights.powerup.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import xyz.nasaknights.powerup.logging.LogLevel;
+import xyz.nasaknights.powerup.logging.Loggable;
+
 public class AutonomousCommand
 {
-    public AutonomousCommand()
+    public AutonomousCommand(Position position)
     {
-    	//String gameMessage = DriverStation.getInstance().getGameSpecificMessage();
-    	
-    	new StraightDriveCommand(-.7, 3000).start();
-    	
-    	/*switch(position)
+        StraightDriveCommand basic = new StraightDriveCommand(-.7, 2800);
+    	char[] gameMessage = DriverStation.getInstance().getGameSpecificMessage().toCharArray();
+
+        Loggable.log("Autonomous", LogLevel.INFO, "Running " + position.name() + " auto with game message " + DriverStation.getInstance().getGameSpecificMessage());
+
+    	switch(position)
     	{
     		case LEFT:
-    			
+    			if(gameMessage[0] == 'L')
+                {
+                    Loggable.log("Autonomous", LogLevel.INFO, "LBA start");
+                    new Left_Basic_Auto().start();
+                }
+                else
+                {
+                    basic.start();
+                }
     			break;
     		case MIDDLE:
-    			
+    			basic.start();
     			break;
     		case RIGHT:
-    			if(gameMessage.charAt(0) == 'R')
+    			if(gameMessage[0] == 'R')
     			{
-    				new Right_Switch_Auto().start();
+                    Loggable.log("Autonomous", LogLevel.INFO, "RBA start");
+    				new Right_Basic_Auto().start();
     			}
     			else
     			{
-    				new StraightDriveCommand(-.7, 2800).start();
+    				basic.start();
     			}
     			break;
-    	}*/
-    }
-    
-    /*private final class Right_Switch_Auto extends CommandGroup
-    {
-    	public Right_Switch_Auto()
-    	{
-    		addSequential(new StraightDriveCommand(-.7, 2800), 2.8);
-            addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.SWITCH));
-            addSequential(new TurnToAngleCommand(-90));
-            addSequential(new StraightDriveCommand(-.7, 1500));
     	}
-    }*/
+    }
+
+    private final class Right_Basic_Auto extends CommandGroup
+    {
+        public Right_Basic_Auto()
+        {
+            addSequential(new StraightDriveCommand(-.7, 2700));
+            addSequential(new DelayCommand(1000));
+            addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.SWITCH, true));
+            addSequential(new TurnDriveCommand(-.6, 1350));
+            addSequential(new StraightDriveCommand(-.7, 1500));
+            addSequential(new IntakeCommand(true), .5);
+        }
+    }
+
+    private final class Left_Basic_Auto extends CommandGroup
+    {
+        public Left_Basic_Auto()
+        {
+            addSequential(new StraightDriveCommand(-.7, 2800));
+            addSequential(new DelayCommand(1000));
+            addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.SWITCH, true));
+            addSequential(new TurnDriveCommand(.6, 1350));
+            addSequential(new StraightDriveCommand(-.7, 1500));
+            addSequential(new IntakeCommand(true), .5);
+        }
+    }
     
     public enum Position
     {

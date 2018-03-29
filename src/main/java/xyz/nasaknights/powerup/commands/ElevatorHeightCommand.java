@@ -4,12 +4,19 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
 import xyz.nasaknights.powerup.Robot;
 
 public class ElevatorHeightCommand extends PIDCommand {
-    public ElevatorHeightCommand(ElevatorCommand.ElevatorHeight target) {
+    public ElevatorHeightCommand(ElevatorCommand.ElevatorHeight target, boolean slow) {
     	super("Elevator", .00015, 0, .00007);
 
         this.getPIDController().setSetpoint(target.getHeight());
         this.getPIDController().setAbsoluteTolerance(1000);
-        this.getPIDController().setOutputRange(-.35, .8);
+        if(slow)
+        {
+            this.getPIDController().setOutputRange(-.35, .5);
+        }
+        else
+        {
+            this.getPIDController().setOutputRange(-.35, .8);
+        }
     }
 
     @Override

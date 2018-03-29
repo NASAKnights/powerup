@@ -5,7 +5,7 @@ import xyz.nasaknights.powerup.Robot;
 
 public class TurnToAngleCommand extends PIDCommand {
 	public TurnToAngleCommand(double target) {
-    	super("TurnToAngle", .01, 0, 0);
+    	super("TurnToAngle", .001, 0, 0);
 
         this.getPIDController().setSetpoint(target);
         this.getPIDController().setAbsoluteTolerance(2);

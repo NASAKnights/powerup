@@ -5,13 +5,8 @@ import java.util.Arrays;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import xyz.nasaknights.powerup.commands.ArcadeDriveCommand;
@@ -41,6 +36,8 @@ public class Robot extends IterativeRobot
     private static ElevatorSubsystem elevator;
     private static GripperSubsystem gripper;
     private static AHRS navx;
+    private static DigitalInput dio0 = new DigitalInput(0);
+    private static DigitalInput dio1 = new DigitalInput(1);
 
     public static IntakeSubsystem getIntake()
     {
@@ -142,7 +139,16 @@ public class Robot extends IterativeRobot
     @Override
     public void autonomousInit()
     {
-        new AutonomousCommand();
+        AutonomousCommand.Position position;
+
+        if (dio0.get() && dio1.get())
+            position = AutonomousCommand.Position.MIDDLE;
+        else if (!dio0.get() && dio1.get())
+            position = AutonomousCommand.Position.RIGHT;
+        else
+            position = AutonomousCommand.Position.LEFT;
+
+        new AutonomousCommand(position);
         new WristCommand(Value.kReverse).start();
         new GripperCommand(Value.kForward).start();
     }

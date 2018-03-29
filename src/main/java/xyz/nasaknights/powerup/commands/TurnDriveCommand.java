@@ -3,12 +3,12 @@ package xyz.nasaknights.powerup.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import xyz.nasaknights.powerup.Robot;
 
-public class StraightDriveCommand extends Command {
+public class TurnDriveCommand extends Command {
     private long timeout;
     private long startMillis = Long.MAX_VALUE;
     private double power;
 
-    public StraightDriveCommand(double power, long timeout) {
+    public TurnDriveCommand(double power, long timeout) {
         this.power = power;
         this.timeout = timeout;
     }
@@ -20,7 +20,7 @@ public class StraightDriveCommand extends Command {
 
     @Override
     protected void execute() {
-        Robot.getDrivetrain().getDrive().arcadeDrive(power, 0);
+        Robot.getDrivetrain().getDrive().arcadeDrive(0, power);
     }
 
     @Override

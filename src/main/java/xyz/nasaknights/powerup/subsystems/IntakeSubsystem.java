@@ -32,8 +32,6 @@ public class IntakeSubsystem
 
     public void setIntakeState(IntakeState state, double power)
     {
-        Loggable.log("Intake", LogLevel.DEBUG, "Changing intake state to " + state.name() + " with power " + (state == IntakeState.STALL ? "15%" : "") + ".");
-
         switch (state)
         {
             case EJECT:

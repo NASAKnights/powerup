@@ -74,8 +74,8 @@ public class FollowTrajectoryCommand extends Command
 
         int pidfSlot = 0;
 
-        loadLeftBuffer = new Notifier(new BufferLoader(Robot.getDrivetrain().getRightMaster(), this.trajectoryToFollow.rightProfile, pidfSlot));
-        loadRightBuffer = new Notifier(new BufferLoader(Robot.getDrivetrain().getLeftMaster(), this.trajectoryToFollow.leftProfile, pidfSlot));
+        loadLeftBuffer = new Notifier(new BufferLoader(Robot.getDrivetrain().getRightMaster(), this.trajectoryToFollow.rightProfile, pidfSlot, true));
+        loadRightBuffer = new Notifier(new BufferLoader(Robot.getDrivetrain().getLeftMaster(), this.trajectoryToFollow.leftProfile, pidfSlot, false));
 
         loadLeftBuffer.startPeriodic(.005);
         loadRightBuffer.startPeriodic(.005);
@@ -172,12 +172,14 @@ public class FollowTrajectoryCommand extends Command
         private TalonSRX talon;
         private SrxMotionProfile prof;
         private int pidfSlot;
+        private boolean reverse;
 
-        public BufferLoader(TalonSRX talon, SrxMotionProfile prof, int pidfSlot)
+        public BufferLoader(TalonSRX talon, SrxMotionProfile prof, int pidfSlot, boolean reverse)
         {
             this.talon = talon;
             this.prof = prof;
             this.pidfSlot = pidfSlot;
+            this.reverse = reverse;
         }
 
         public void run()
@@ -193,8 +195,8 @@ public class FollowTrajectoryCommand extends Command
             {
                 TrajectoryPoint point = new TrajectoryPoint();
                 /* for each point, fill our structure and pass it to API */
-                point.position = prof.points[lastPointSent][0];
-                point.velocity = prof.points[lastPointSent][1];
+                point.position = prof.points[lastPointSent][0] * (reverse ? -1 : 1);
+                point.velocity = prof.points[lastPointSent][1] * (reverse ? -1 : 1);
                 point.timeDur = TrajectoryDuration.Trajectory_Duration_10ms;
                 point.profileSlotSelect0 = pidfSlot;
                 point.profileSlotSelect1 = pidfSlot;
