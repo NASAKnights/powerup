@@ -139,6 +139,8 @@ public class Robot extends IterativeRobot
     @Override
     public void autonomousInit()
     {
+        getDrivetrain().getDrive().setMaxOutput(1);
+
         AutonomousCommand.Position position;
 
         if (dio0.get() && dio1.get())
@@ -156,6 +158,7 @@ public class Robot extends IterativeRobot
     @Override
     public void teleopInit()
     {
+        getDrivetrain().getDrive().setMaxOutput(.7);
     	new ArcadeDriveCommand().start();
     }
 
