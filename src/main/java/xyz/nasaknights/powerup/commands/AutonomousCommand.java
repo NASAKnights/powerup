@@ -25,6 +25,14 @@ public class AutonomousCommand
                 {
                     new Left_Scale_Auto().start();
                 }
+                else if(gameMessage[1] == 'R' && gameMessage[0] == 'L' && scale)
+                {
+                    new Left_Switch_Auto().start();
+                }
+                else if(gameMessage[0] == 'R' && gameMessage[1] == 'L' && !scale)
+                {
+                    new Left_Scale_Auto().start();
+                }
                 else
                 {
                     basic.start();
@@ -42,6 +50,14 @@ public class AutonomousCommand
                 {
                     new Right_Scale_Auto().start();
                 }
+                else if(gameMessage[1] == 'L' && gameMessage[0] == 'R' && scale)
+                {
+                    new Right_Switch_Auto().start();
+                }
+                else if(gameMessage[0] == 'L' && gameMessage[1] == 'R' && !scale)
+                {
+                    new Right_Scale_Auto().start();
+                }
                 else
                 {
                     basic.start();
@@ -54,11 +70,11 @@ public class AutonomousCommand
     {
         public Right_Switch_Auto()
         {
-            addSequential(new StraightDriveCommand(-.7, 2700));
+            addSequential(new StraightDriveCommand(-.7, 2600));
             addSequential(new DelayCommand(1000));
             addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.SWITCH, true));
-            addSequential(new TurnDriveCommand(-.6, 1350));
-            addSequential(new StraightDriveCommand(-.7, 1500));
+            addSequential(new TurnDriveCommand(-.85, 750));
+            addSequential(new StraightDriveCommand(-.7, 2000));
             addSequential(new IntakeCommand(true), .5);
         }
     }
@@ -67,11 +83,11 @@ public class AutonomousCommand
     {
         public Left_Switch_Auto()
         {
-            addSequential(new StraightDriveCommand(-.7, 2700));
+            addSequential(new StraightDriveCommand(-.7, 2600));
             addSequential(new DelayCommand(1000));
             addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.SWITCH, true));
-            addSequential(new TurnDriveCommand(.6, 1350));
-            addSequential(new StraightDriveCommand(-.7, 1500));
+            addSequential(new TurnDriveCommand(.85, 750));
+            addSequential(new StraightDriveCommand(-.7, 2000));
             addSequential(new IntakeCommand(true), .5);
         }
     }
@@ -80,10 +96,11 @@ public class AutonomousCommand
     {
         public Right_Scale_Auto()
         {
-            addSequential(new StraightDriveCommand(-.7, 4000));
+            addSequential(new StraightDriveCommand(-.7, 4400));
             addSequential(new DelayCommand(1000));
-            addSequential(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.TOP, true));
-            addSequential(new TurnDriveCommand(-.6, 675));
+            addSequential(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.TOP, false), 2.5);
+            addSequential(new TurnDriveCommand(-.85, 400));
+            addSequential(new StraightDriveCommand(-.7, 200));
             addSequential(new DelayCommand(200));
             addSequential(new IntakeCommand(true), .5);
         }
@@ -93,10 +110,11 @@ public class AutonomousCommand
     {
         public Left_Scale_Auto()
         {
-            addSequential(new StraightDriveCommand(-.7, 4000));
+            addSequential(new StraightDriveCommand(-.7, 4400));
             addSequential(new DelayCommand(1000));
-            addSequential(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.TOP, true));
-            addSequential(new TurnDriveCommand(.6, 675));
+            addSequential(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.TOP, false), 2.5);
+            addSequential(new TurnDriveCommand(.85, 400));
+            addSequential(new StraightDriveCommand(-.7, 200));
             addSequential(new DelayCommand(200));
             addSequential(new IntakeCommand(true), .5);
         }
