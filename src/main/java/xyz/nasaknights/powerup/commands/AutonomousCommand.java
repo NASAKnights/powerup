@@ -75,7 +75,7 @@ public class AutonomousCommand
             addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.SWITCH, true));
             addSequential(new TurnDriveCommand(-.85, 750));
             addSequential(new StraightDriveCommand(-.7, 2000));
-            addSequential(new IntakeCommand(true), .5);
+            addSequential(new IntakeCommand(true, false), .5);
         }
     }
 
@@ -88,7 +88,7 @@ public class AutonomousCommand
             addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.SWITCH, true));
             addSequential(new TurnDriveCommand(.85, 750));
             addSequential(new StraightDriveCommand(-.7, 2000));
-            addSequential(new IntakeCommand(true), .5);
+            addSequential(new IntakeCommand(true, false), .5);
         }
     }
 
@@ -102,7 +102,7 @@ public class AutonomousCommand
             addSequential(new TurnDriveCommand(-.85, 400));
             addSequential(new StraightDriveCommand(-.7, 200));
             addSequential(new DelayCommand(200));
-            addSequential(new IntakeCommand(true), .5);
+            addSequential(new IntakeCommand(true, false), .5);
             addSequential(new DelayCommand(100));
             addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.BOTTOM, false));
             addSequential(new StraightDriveCommand(.55, 1000), 1);
@@ -121,7 +121,7 @@ public class AutonomousCommand
             addSequential(new TurnDriveCommand(.85, 400));
             addSequential(new StraightDriveCommand(-.7, 200));
             addSequential(new DelayCommand(200));
-            addSequential(new IntakeCommand(true), .5);
+            addSequential(new IntakeCommand(true, false), .5);
             addSequential(new DelayCommand(100));
             addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.BOTTOM, false));
             addSequential(new StraightDriveCommand(.55, 1000), 1);

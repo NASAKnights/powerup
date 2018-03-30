@@ -1,28 +1,17 @@
 package xyz.nasaknights.powerup;
 
-import java.util.Arrays;
-
 import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import xyz.nasaknights.powerup.commands.ArcadeDriveCommand;
-import xyz.nasaknights.powerup.commands.AutonomousCommand;
-import xyz.nasaknights.powerup.commands.ElevatorCommand;
-import xyz.nasaknights.powerup.commands.GripperCommand;
-import xyz.nasaknights.powerup.commands.IntakeCommand;
-import xyz.nasaknights.powerup.commands.WristCommand;
+import xyz.nasaknights.powerup.commands.*;
 import xyz.nasaknights.powerup.logging.LogLevel;
 import xyz.nasaknights.powerup.logging.Loggable;
-import xyz.nasaknights.powerup.subsystems.DrivetrainSubsystem;
-import xyz.nasaknights.powerup.subsystems.ElevatorSubsystem;
-import xyz.nasaknights.powerup.subsystems.GripperSubsystem;
-import xyz.nasaknights.powerup.subsystems.IntakeSubsystem;
-import xyz.nasaknights.powerup.subsystems.SubsystemInitializationException;
-import xyz.nasaknights.powerup.subsystems.WristSubsystem;
+import xyz.nasaknights.powerup.subsystems.*;
+
+import java.util.Arrays;
 
 public class Robot extends IterativeRobot
 {
@@ -211,7 +200,6 @@ public class Robot extends IterativeRobot
 
     private void prepareInputs()
     {
-        // new JoystickButton(getOperator(), PS4Controller.Buttons.X.getID()).whenPressed(new GripperCommand());
         new JoystickButton(getOperator(), PS4Controller.Buttons.SQUARE.getID()).whenPressed(new WristCommand(Value.kForward));
         new JoystickButton(getOperator(), PS4Controller.Buttons.SQUARE.getID()).whenReleased(new WristCommand(Value.kReverse));
         new JoystickButton(getOperator(), PS4Controller.Buttons.X.getID()).whenPressed(new GripperCommand(Value.kReverse));
@@ -219,8 +207,10 @@ public class Robot extends IterativeRobot
         new JoystickButton(getOperator(), PS4Controller.Buttons.TRIANGLE.getID()).whileHeld(new ElevatorCommand(true));
         new JoystickButton(getOperator(), PS4Controller.Buttons.CIRCLE.getID()).whileHeld(new ElevatorCommand(false));
 
-        new JoystickButton(getOperator(), PS4Controller.Buttons.LEFT_BUMPER.getID()).whileHeld(new IntakeCommand(true));
-        new JoystickButton(getOperator(), PS4Controller.Buttons.RIGHT_BUMPER.getID()).whileHeld(new IntakeCommand(false));
+        new JoystickButton(getOperator(), PS4Controller.Buttons.LEFT_BUMPER.getID()).whileHeld(new IntakeCommand(true, false));
+        new JoystickButton(getOperator(), PS4Controller.Buttons.RIGHT_BUMPER.getID()).whileHeld(new IntakeCommand(false, false));
+        new JoystickButton(getOperator(), PS4Controller.Buttons.OPTIONS.getID()).whileHeld(new IntakeCommand(false, true));
+        new JoystickButton(getOperator(), PS4Controller.Buttons.SHARE.getID()).whileHeld(new IntakeCommand(true, true));
     }
 
     private enum Authors

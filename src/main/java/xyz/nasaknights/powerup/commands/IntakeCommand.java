@@ -7,16 +7,18 @@ import xyz.nasaknights.powerup.subsystems.IntakeSubsystem;
 public class IntakeCommand extends Command
 {
     private boolean out;
+    private boolean slow;
 
-    public IntakeCommand(boolean out)
+    public IntakeCommand(boolean out, boolean slow)
     {
+        this.slow = slow;
         this.out = out;
     }
 
     @Override
     protected void execute()
     {
-        Robot.getIntake().setIntakeState(out ? IntakeSubsystem.IntakeState.EJECT : IntakeSubsystem.IntakeState.INTAKE, 1);
+        Robot.getIntake().setIntakeState(out ? IntakeSubsystem.IntakeState.EJECT : IntakeSubsystem.IntakeState.INTAKE, slow ? .6 : 1);
     }
 
     @Override
