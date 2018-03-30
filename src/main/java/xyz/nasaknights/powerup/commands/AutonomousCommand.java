@@ -48,11 +48,11 @@ public class AutonomousCommand
     {
         public Right_Basic_Auto()
         {
-            addSequential(new StraightDriveCommand(-.7, 2700));
+            addSequential(new StraightDriveCommand(-.7, 2600));
             addSequential(new DelayCommand(1000));
             addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.SWITCH, true));
-            addSequential(new TurnDriveCommand(-.85, 600));
-            addSequential(new StraightDriveCommand(-.7, 1500));
+            addSequential(new TurnDriveCommand(-.85, 790));
+            addSequential(new StraightDriveCommand(-.7, 2000));
             addSequential(new IntakeCommand(true), .5);
         }
     }
@@ -61,11 +61,11 @@ public class AutonomousCommand
     {
         public Left_Basic_Auto()
         {
-            addSequential(new StraightDriveCommand(-.7, 2800));
+            addSequential(new StraightDriveCommand(-.7, 2600));
             addSequential(new DelayCommand(1000));
             addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.SWITCH, true));
-            addSequential(new TurnDriveCommand(.85, 600));
-            addSequential(new StraightDriveCommand(-.7, 1500));
+            addSequential(new TurnDriveCommand(.85, 790));
+            addSequential(new StraightDriveCommand(-.7, 2000));
             addSequential(new IntakeCommand(true), .5);
         }
     }
