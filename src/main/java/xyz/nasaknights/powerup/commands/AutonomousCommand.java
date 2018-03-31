@@ -96,17 +96,17 @@ public class AutonomousCommand
     {
         public Right_Scale_Auto()
         {
-            addSequential(new StraightDriveCommand(-.9, 1900));
-            addSequential(new StraightDriveCommand(-.7, 1000));
-            addSequential(new DelayCommand(500));
+            addSequential(new StraightDriveCommand(-.9, 1900), 1.9);
+            addSequential(new StraightDriveCommand(-.7, 1000), 1);
+            addSequential(new DelayCommand(300));
             addSequential(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.TOP, false), 1.5);
-            addSequential(new TurnDriveCommand(-.85, 600));
-            addSequential(new StraightDriveCommand(-.7, 500));
+            addSequential(new TurnDriveCommand(-.85, 500), .5);
+            addSequential(new StraightDriveCommand(-.7, 1000), 1);
             addSequential(new IntakeCommand(true, false), .3);
-            // First Cube Done, Begin Second
             addSequential(new DelayCommand(100));
-            addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.BOTTOM, false), 1.5);
-            addSequential(new StraightDriveCommand(.7, 1500), 1500);
+            addSequential(new StraightDriveCommand(.65, 300), .3);
+            addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.BOTTOM, false), 2.1);
+            addSequential(new StraightDriveCommand(.7, 1500), 1.5);
         }
     }
 
@@ -114,17 +114,18 @@ public class AutonomousCommand
     {
         public Left_Scale_Auto()
         {
-            addSequential(new StraightDriveCommand(-.9, 1900));
-            addSequential(new StraightDriveCommand(-.7, 1000));
-            addSequential(new DelayCommand(500));
+            addSequential(new StraightDriveCommand(-.9, 1900), 1.9);
+            addSequential(new StraightDriveCommand(-.7, 1000), 1.0);
+            addSequential(new DelayCommand(300));
             addSequential(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.TOP, false), 1.5);
-            addSequential(new TurnDriveCommand(.85, 690));
-            addSequential(new StraightDriveCommand(-.7, 400));
+            addSequential(new TurnDriveCommand(.85, 690), .69);
+            addSequential(new StraightDriveCommand(-.7, 400), .4);
             addSequential(new DelayCommand(200));
             addSequential(new IntakeCommand(true, false), .3);
             addSequential(new DelayCommand(100));
-            addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.BOTTOM, false), 1.5);
-            addSequential(new StraightDriveCommand(.65, 1500), 1500);
+            addSequential(new StraightDriveCommand(.65, 500), .5);
+            addParallel(new ElevatorHeightCommand(ElevatorCommand.ElevatorHeight.BOTTOM, false), 2.1);
+            addSequential(new StraightDriveCommand(.65, 700), .7);
         }
     }
     
