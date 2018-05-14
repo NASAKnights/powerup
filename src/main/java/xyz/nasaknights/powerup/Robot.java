@@ -28,6 +28,7 @@ public class Robot extends IterativeRobot
     private static DigitalInput dio0 = new DigitalInput(0);
     private static DigitalInput dio1 = new DigitalInput(1);
     private static DigitalInput dio2 = new DigitalInput(2);
+    private static DigitalInput dio3 = new DigitalInput(3);
 
     public static IntakeSubsystem getIntake()
     {
@@ -211,6 +212,9 @@ public class Robot extends IterativeRobot
         new JoystickButton(getOperator(), PS4Controller.Buttons.RIGHT_BUMPER.getID()).whileHeld(new IntakeCommand(false, false));
         new JoystickButton(getOperator(), PS4Controller.Buttons.OPTIONS.getID()).whileHeld(new IntakeCommand(false, true));
         new JoystickButton(getOperator(), PS4Controller.Buttons.SHARE.getID()).whileHeld(new IntakeCommand(true, true));
+
+        new JoystickButton(getOperator(), PS4Controller.Buttons.LEFT_JOYSTICK.getID()).whenPressed(new SupervisorCommand(true));
+        new JoystickButton(getOperator(), PS4Controller.Buttons.RIGHT_JOYSTICK.getID()).whenPressed(new SupervisorCommand(false));
     }
 
     private enum Authors
@@ -255,5 +259,10 @@ public class Robot extends IterativeRobot
     public static AHRS getNavX()
     {
     	return navx;
+    }
+
+    public static boolean getDemonstrationMode()
+    {
+        return dio3.get();
     }
 }

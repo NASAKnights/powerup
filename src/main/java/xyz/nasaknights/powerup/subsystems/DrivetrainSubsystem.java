@@ -7,9 +7,12 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import xyz.nasaknights.powerup.Robot;
 import xyz.nasaknights.powerup.commands.ArcadeDriveCommand;
+import xyz.nasaknights.powerup.commands.SupervisorCommand;
 import xyz.nasaknights.powerup.logging.LogLevel;
 import xyz.nasaknights.powerup.logging.Loggable;
+import xyz.nasaknights.powerup.threading.RecurringThread;
 
 public class DrivetrainSubsystem extends Subsystem
 {
@@ -54,6 +57,25 @@ public class DrivetrainSubsystem extends Subsystem
             
             frontLeft.configOpenloopRamp(.25, 10);
             frontRight.configOpenloopRamp(.25, 10);
+
+            Loggable.log("Drivetrain", LogLevel.INFO, "Done.");
+            Loggable.log("Drivetrain", LogLevel.INFO, "Starting demonstration monitor.");
+
+            new RecurringThread() {
+                @Override
+                public void action() {
+                    if(Robot.getDemonstrationMode() && !SupervisorCommand.isSupervisory())
+                    {
+                        frontLeft.configPeakOutputForward(40, 10);
+                        frontRight.configPeakOutputReverse(40, 10);
+                    }
+                    else
+                    {
+                        frontLeft.configPeakOutputForward(100, 10);
+                        frontRight.configPeakOutputReverse(100, 10);
+                    }
+                }
+            }.run();
 
             Loggable.log("Drivetrain", LogLevel.INFO, "Done.");
         } catch (Exception e)
