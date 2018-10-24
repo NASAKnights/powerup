@@ -1,33 +1,17 @@
 package xyz.nasaknights.powerup;
 
-import java.util.Arrays;
-
 import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import xyz.nasaknights.powerup.commands.ArcadeDriveCommand;
-import xyz.nasaknights.powerup.commands.AutonomousCommand;
-import xyz.nasaknights.powerup.commands.ElevatorCommand;
-import xyz.nasaknights.powerup.commands.GripperCommand;
-import xyz.nasaknights.powerup.commands.IntakeCommand;
-import xyz.nasaknights.powerup.commands.WristCommand;
+import xyz.nasaknights.powerup.commands.*;
 import xyz.nasaknights.powerup.logging.LogLevel;
 import xyz.nasaknights.powerup.logging.Loggable;
-import xyz.nasaknights.powerup.subsystems.DrivetrainSubsystem;
-import xyz.nasaknights.powerup.subsystems.ElevatorSubsystem;
-import xyz.nasaknights.powerup.subsystems.GripperSubsystem;
-import xyz.nasaknights.powerup.subsystems.IntakeSubsystem;
-import xyz.nasaknights.powerup.subsystems.SubsystemInitializationException;
-import xyz.nasaknights.powerup.subsystems.WristSubsystem;
+import xyz.nasaknights.powerup.subsystems.*;
+
+import java.util.Arrays;
 
 public class Robot extends IterativeRobot
 {
@@ -41,6 +25,9 @@ public class Robot extends IterativeRobot
     private static ElevatorSubsystem elevator;
     private static GripperSubsystem gripper;
     private static AHRS navx;
+    private static DigitalInput dio0 = new DigitalInput(0);
+    private static DigitalInput dio1 = new DigitalInput(1);
+    private static DigitalInput dio2 = new DigitalInput(2);
 
     public static IntakeSubsystem getIntake()
     {
@@ -130,7 +117,7 @@ public class Robot extends IterativeRobot
         try {
 	          navx = new AHRS(SPI.Port.kMXP); 
 	    } catch (RuntimeException ex ) {
-	          DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
+	          DriverStation.reportError("Error instantiating navX MXP: " + ex.getMessage(), true);
 	    }
     }
 
@@ -142,7 +129,16 @@ public class Robot extends IterativeRobot
     @Override
     public void autonomousInit()
     {
-        new AutonomousCommand();
+        AutonomousCommand.Position position;
+
+        if (dio0.get() && dio1.get())
+            position = AutonomousCommand.Position.MIDDLE;
+        else if (!dio0.get() && dio1.get())
+            position = AutonomousCommand.Position.RIGHT;
+        else
+            position = AutonomousCommand.Position.LEFT;
+
+        new AutonomousCommand(position, dio2.get());
         new WristCommand(Value.kReverse).start();
         new GripperCommand(Value.kForward).start();
     }
@@ -204,16 +200,20 @@ public class Robot extends IterativeRobot
 
     private void prepareInputs()
     {
-        // new JoystickButton(getOperator(), PS4Controller.Buttons.X.getID()).whenPressed(new GripperCommand());
+        new JoystickButton(getDriver(), PS4Controller.Buttons.TRIANGLE.getID()).whenPressed(new RumbleCommand(getOperator(), true));
+        new JoystickButton(getDriver(), PS4Controller.Buttons.TRIANGLE.getID()).whenReleased(new RumbleCommand(getOperator(), false));
+        new JoystickButton(getDriver(), PS4Controller.Buttons.RIGHT_BUMPER.getID()).whenPressed(new GripperCommand(Value.kReverse));
+        new JoystickButton(getDriver(), PS4Controller.Buttons.RIGHT_BUMPER.getID()).whenReleased(new GripperCommand(Value.kForward));
+
         new JoystickButton(getOperator(), PS4Controller.Buttons.SQUARE.getID()).whenPressed(new WristCommand(Value.kForward));
         new JoystickButton(getOperator(), PS4Controller.Buttons.SQUARE.getID()).whenReleased(new WristCommand(Value.kReverse));
-        new JoystickButton(getOperator(), PS4Controller.Buttons.X.getID()).whenPressed(new GripperCommand(Value.kReverse));
-        new JoystickButton(getOperator(), PS4Controller.Buttons.X.getID()).whenReleased(new GripperCommand(Value.kForward));
         new JoystickButton(getOperator(), PS4Controller.Buttons.TRIANGLE.getID()).whileHeld(new ElevatorCommand(true));
         new JoystickButton(getOperator(), PS4Controller.Buttons.CIRCLE.getID()).whileHeld(new ElevatorCommand(false));
 
-        new JoystickButton(getOperator(), PS4Controller.Buttons.LEFT_BUMPER.getID()).whileHeld(new IntakeCommand(true));
-        new JoystickButton(getOperator(), PS4Controller.Buttons.RIGHT_BUMPER.getID()).whileHeld(new IntakeCommand(false));
+        new JoystickButton(getOperator(), PS4Controller.Buttons.LEFT_BUMPER.getID()).whileHeld(new IntakeCommand(true, false));
+        new JoystickButton(getOperator(), PS4Controller.Buttons.RIGHT_BUMPER.getID()).whileHeld(new IntakeCommand(false, false));
+        new JoystickButton(getOperator(), PS4Controller.Buttons.OPTIONS.getID()).whileHeld(new IntakeCommand(false, true));
+        new JoystickButton(getOperator(), PS4Controller.Buttons.SHARE.getID()).whileHeld(new IntakeCommand(true, true));
     }
 
     private enum Authors
