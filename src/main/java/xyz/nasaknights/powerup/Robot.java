@@ -152,31 +152,6 @@ public class Robot extends IterativeRobot
     {
     	new ArcadeDriveCommand().start();
     }
-
-    @Override
-    public void testInit()
-    {
-    }
-
-    @Override
-    public void disabledPeriodic()
-    {
-    }
-
-    @Override
-    public void autonomousPeriodic()
-    {
-    }
-
-    @Override
-    public void teleopPeriodic()
-    {
-    }
-
-    @Override
-    public void testPeriodic()
-    {
-    }
     
     @Override
     public void robotPeriodic()
